@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Contact {
 
     public Contact(String name, String number){
         this.name = name;
+        number = "(" + number.substring(0,3) + ") " + number.substring(3,6) + " - " + number.substring(6);
         this.number = number;
     }
 
@@ -35,9 +37,12 @@ public class Contact {
 //    }
 
     public void Add() throws IOException {
+
+        String name =  String.format("|%-20s|", this.Cname());
+        String number = String.format("%-10s|", this.phoneNumber());
         Files.write(
                 mainFile,
-                Arrays.asList(this.Cname() +"\t---\t"+ this.phoneNumber()), // list with one item
+                Arrays.asList(name+number), // list with one item
                 StandardOpenOption.APPEND
         );
 
@@ -45,9 +50,18 @@ public class Contact {
 
     public static void readContents() throws IOException {
         List<String> contactList =  Files.readAllLines(mainFile);
+
         if(contactList.size() != 0){
-            for (int i = 0; i < contactList.size(); i += 1) {
-                System.out.println((i + 1) + ":" + contactList.get(i));
+            System.out.println("\n _____________________________________");
+            System.out.printf("|        NAME        |     NUMBER     |\n");
+            for (int i = 0; i <= contactList.size(); i += 1) {
+                if (i == contactList.size()){
+                    System.out.printf(" _____________________________________\n");
+                }
+                else{
+                    System.out.println("|--------------------+----------------|");
+                    System.out.println(contactList.get(i));
+                }
             }
         }
         else{
